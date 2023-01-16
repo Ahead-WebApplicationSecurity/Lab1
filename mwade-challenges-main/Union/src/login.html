@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Glassic</title>
+        <!--Stylesheet-->
+        <style media="screen">
+            *,
+            *:before,
+            *:after{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            }
+            body{
+            background-color: #000000;
+            background-color:black;
+background-image:
+radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+            }
+            .background{
+            width: 430px;
+            height: 520px;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            left: 50%;
+            top: 50%;
+            }
+            .background .shape{
+            height: 200px;
+            width: 200px;
+            position: absolute;
+            border-radius: 50%;
+            }
+            .shape:first-child{
+            background: linear-gradient(
+            #1845ad,
+            #23a2f6
+            );
+            left: -80px;
+            top: -80px;
+            }
+            .shape:last-child{
+            background: linear-gradient(
+            to right,
+            #ff512f,
+            #f09819
+            );
+            right: -30px;
+            bottom: -80px;
+            }
+            form{
+            height: min-content;
+            width: 400px;
+            background-color: rgba(0,0,0);
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 40px rgba(8,7,16,0.6);
+            padding: 50px 35px;
+            }
+            form *{
+            font-family: 'Poppins',sans-serif;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            outline: none;
+            border: none;
+            }
+            form h3{
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 42px;
+            text-align: center;
+            }
+            label{
+            display: block;
+            margin-top: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            }
+            input{
+            display: block;
+            height: 50px;
+            width: 100%;
+            background-color: rgba(255,255,255,0.07);
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 300;
+            }
+            ::placeholder{
+            color: #e5e5e5;
+            }
+            button{
+            margin-top: 50px;
+            width: 100%;
+            background-color: #ffffff;
+            color: #080710;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+            #error {
+            display: none;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 20px 0 0 0;
+            background: rgba(255, 81, 47, 0.60);
+            color: #ffffff;
+            }
+            #output{
+            color: #00fb00;
+            }
+        </style>
+    </head>
+    <body>
+        <form action="/api/login" method="post">
+            <div id="login_form" style="display: block">
+                <h3>Login</h3>
+                <div id="error" >ASDA</div>
+                <label for="username">Username</label>
+                <input type="text" placeholder="Email or Phone" name="username" id="username">
+                <label for="password">Password</label>
+                <input type="password" placeholder="Password" name="password" id="password">
+                <button type="submit">Log In</button>
+            </div>
+            <div id="output" style="display: none">
+            </div>
+        </form>
+        <script>
+            const form = document.querySelector('form')
+            form.addEventListener('submit', event => {
+              event.preventDefault()
+              const error = document.getElementById("error")
+              const output = document.getElementById("output")
+              const login_form = document.getElementById("login_form")
+              const formData = new FormData(form)
+              const username = formData.get('username')
+              const password = formData.get('password')
+              const user = {
+                username,
+                password
+              }
+              fetch('/api/login', {
+                method: 'POST',
+                redirect: 'follow',
+                body: JSON.stringify(user),
+                headers: {
+                  'content-type': 'application/json'
+                }
+              })
+                .then(response => response.json())
+                .then(result => {
+                  error.style.display = "none"
+                  if (result?.status === 'FAILED') {
+                    error.innerText = result?.message
+                    error.style.display = "block"
+                  } else if(result?.status === 'SUCCESS') {
+                    login_form.style.display = "none"
+                    output.style.display = "block"
+                    output.innerText = result?.message
+                  }
+                })
+            })
+        </script>
+    </body>
+</html>
